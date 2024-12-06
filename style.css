@@ -1,49 +1,59 @@
 body {
-	margin: 0;
-	padding: 0;
-	font-size: 18px;
-	color: var(--tg-theme-text-color);
-	background: var(--tg-theme-bg-color);
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    color: var(--tg-theme-text-color, #000); /* Цвет текста */
+    background: var(--tg-theme-bg-color, #fff); /* Цвет фона */
 }
 
 .container {
-	max-width: 390px;
+    max-width: 100%; /* Увеличиваем ширину */
+    margin: 0 auto;
+    padding: 20px;
 }
 
 .inner {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	grid-template-rows: 200px 200px 200px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Автоматическая сетка */
+    gap: 20px; /* Расстояние между элементами */
 }
 
 .img {
-	width: 150px;
+    width: 100%; /* Авторазмер изображений */
+    height: auto;
+    object-fit: cover;
 }
 
 .item {
-	text-align: center;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .btn {
-	display: inline-block;
-	padding: 10px 20px;
-	border: none;
-	background: rgb(248, 168, 24);
-	border-radius: 10px;
-	color: #fff;
-	text-transform: uppercase;
-	font-weight: 700;
-
-	transition: background .2s linear;
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    background: rgb(248, 168, 24);
+    border-radius: 10px;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 700;
+    transition: background 0.2s linear;
+    cursor: pointer;
 }
 
 .btn:hover {
-	background: lightgreen;
+    background: lightgreen;
 }
 
 .usercard {
-	text-align: center;
+    text-align: center;
+    margin-top: 20px;
 }
+
 
 
 
