@@ -5,94 +5,68 @@ tg.expand();
 tg.MainButton.textColor = '#FFFFFF';
 tg.MainButton.color = '#2cab37';
 
-let item = "";
+let cart = []; // Корзина
 
-let btn1 = document.getElementById("btn1");
-let btn2 = document.getElementById("btn2");
-let btn3 = document.getElementById("btn3");
-let btn4 = document.getElementById("btn4");
-let btn5 = document.getElementById("btn5");
-let btn6 = document.getElementById("btn6");
+// Меню с товарами
+const menu = [
+    { id: 1, name: "🥤Adrenalin rush 0.449", price: 140 },
+    { id: 2, name: "🥤Adrenalin rush 0.25", price: 99 },
+    { id: 3, name: "🥐Булочка с корицей", price: 70 },
+    { id: 4, name: "🥐Булочка с маком", price: 70 },
+    { id: 5, name: "🍕Пицца", price: 220 }
+];
 
-btn1.addEventListener("click", function(){
-	if (tg.MainButton.isVisible) {
-		tg.MainButton.hide();
-	}
-	else {
-		tg.MainButton.setText("Вы выбрали товар 1!");
-		item = "1";
-		tg.MainButton.show();
-	}
+// Обновление текста основной кнопки
+function updateCartDisplay() {
+    let total = cart.reduce((sum, item) => sum + item.price, 0);
+    let names = cart.map(item => item.name).join(", ");
+    tg.MainButton.setText(`Корзина: ${names} | Сумма: ${total}₽`);
+}
+
+// Добавление товара в корзину
+function toggleItem(itemId) {
+    let item = menu.find(product => product.id === itemId);
+
+    if (!item) return;
+
+    if (cart.some(product => product.id === itemId)) {
+        // Если товар уже есть в корзине — удаляем
+        cart = cart.filter(product => product.id !== itemId);
+    } else {
+        // Если товара нет в корзине — добавляем
+        cart.push(item);
+    }
+
+    if (cart.length > 0) {
+        tg.MainButton.show();
+        updateCartDisplay();
+    } else {
+        tg.MainButton.hide();
+    }
+}
+
+// Навешиваем обработчики на кнопки
+document.querySelectorAll(".btn").forEach((btn, index) => {
+    btn.addEventListener("click", function () {
+        toggleItem(index + 1);
+    });
 });
 
-btn2.addEventListener("click", function(){
-	if (tg.MainButton.isVisible) {
-		tg.MainButton.hide();
-	}
-	else {
-		tg.MainButton.setText("Вы выбрали товар 2!");
-		item = "2";
-		tg.MainButton.show();
-	}
+// Обработчик нажатия на основную кнопку
+Telegram.WebApp.onEvent("mainButtonClicked", function () {
+    let order = cart.map(item => `${item.name} - ${item.price}₽`).join("\n");
+    let total = cart.reduce((sum, item) => sum + item.price, 0);
+
+    tg.sendData(JSON.stringify({
+        order: order,
+        total: total
+    }));
 });
 
-btn3.addEventListener("click", function(){
-	if (tg.MainButton.isVisible) {
-		tg.MainButton.hide();
-	}
-	else {
-		tg.MainButton.setText("Вы выбрали товар 3!");
-		item = "3";
-		tg.MainButton.show();
-	}
-});
-
-btn4.addEventListener("click", function(){
-	if (tg.MainButton.isVisible) {
-		tg.MainButton.hide();
-	}
-	else {
-		tg.MainButton.setText("Вы выбрали товар 4!");
-		item = "4";
-		tg.MainButton.show();
-	}
-});
-
-btn5.addEventListener("click", function(){
-	if (tg.MainButton.isVisible) {
-		tg.MainButton.hide();
-	}
-	else {
-		tg.MainButton.setText("Вы выбрали товар 5!");
-		item = "5";
-		tg.MainButton.show();
-	}
-});
-
-btn6.addEventListener("click", function(){
-	if (tg.MainButton.isVisible) {
-		tg.MainButton.hide();
-	}
-	else {
-		tg.MainButton.setText("Вы выбрали товар 6!");
-		item = "6";
-		tg.MainButton.show();
-	}
-});
-
-
-Telegram.WebApp.onEvent("mainButtonClicked", function(){
-	tg.sendData(item);
-});
-
-
+// Отображение имени пользователя
 let usercard = document.getElementById("usercard");
-
 let p = document.createElement("p");
-
-p.innerText = `${tg.initDataUnsafe.user.first_name}
-${tg.initDataUnsafe.user.last_name}`;
-
+p.innerText = `Привет, ${tg.initDataUnsafe.user.first_name}! Выберите еду 👇`;
 usercard.appendChild(p);
 
 
